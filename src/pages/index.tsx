@@ -124,15 +124,14 @@ const clickBoard = (
   board: BoardArray,
 ): { newBoard: BoardArray; turn: number } => {
   //ANCHOR - clickBoard
-  let turn = turnColor;
   const clearBoard = board.map((row) => row.map((color) => color % 3));
-  turn = 3 - changeBoard(params.y, params.x, turn, 1, clearBoard);
+  const turn = 3 - changeBoard(params.y, params.x, turnColor, 1, clearBoard);
   //test
   changeBoard3(clearBoard, turn);
-  turn = turn * pass(clearBoard) - (3 - turn) * (pass(clearBoard) - 1); //pass
-  changeBoard3(clearBoard, turn);
-  turn = turn * pass(clearBoard) - 3 * (pass(clearBoard) - 1); //end
-  return { newBoard: clearBoard, turn };
+  const nextTurn = turn * pass(clearBoard) - (3 - turn) * (pass(clearBoard) - 1); //pass
+  changeBoard3(clearBoard, nextTurn);
+  const nextNextTurn = turn * pass(clearBoard) - 3 * (pass(clearBoard) - 1); //end
+  return { newBoard: clearBoard, turn: nextNextTurn };
 };
 
 const Home = () => {
