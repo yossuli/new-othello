@@ -23,8 +23,7 @@ const dir: { y: -1 | 0 | 1; x: -1 | 0 | 1 }[] = [
 const num0or_1 = (dir: { arr: number[]; y: number; x: number }) =>
   Math.ceil(Math.max(dir.y + 0.5 * dir.x, 0) / 2) - 1;
 //ANCHOR - changeBoard
-const changeBoard = (y: number, x: number, turnColor: number, type: 0 | 1, board: BoardArray) => {
-  let changeTurnColor = 3 - turnColor;
+const dirs = (y: number, x: number, turnColor: number, type: 0 | 1, board: BoardArray) => {
   const dirs1: { arr: number[]; y: number; x: number }[] = dir.map((d) => {
     const arr1 = board //クリックしたところを起点に長方形にboardを切り取る
       .map((row) =>
@@ -85,14 +84,19 @@ const changeBoard = (y: number, x: number, turnColor: number, type: 0 | 1, board
       x: dir.x,
     };
   });
-  const dirs5 = dirs4.filter((dir) => dir.arr.every((n) => n === 3 - turnColor)); //配列の中身がすべて3-turnColorか判断
+  return dirs4.filter((dir) => dir.arr.every((n) => n === 3 - turnColor)); //配列の中身がすべて3-turnColorか判断
+};
+const changeBoard = (y: number, x: number, turnColor: number, type: 0 | 1, board: BoardArray) => {
+  const dirs5 = dirs(y, x, turnColor, type, board);
   dirs5.forEach((dir) => {
     dir.arr.forEach((_, n) => {
       board[y + (n + 1) * dir.y * type][x + (n + 1) * dir.x * type] =
         turnColor * type - 3 * (type - 1);
-      changeTurnColor = turnColor * type - (3 - turnColor) * (type - 1);
     });
   });
+  const changeTurnColor = [3 - turnColor, turnColor * type - (3 - turnColor) * (type - 1)][
+    Math.min(dirs5.length, 1)
+  ];
   const controlsTurn = Math.abs(Math.abs(turnColor - changeTurnColor) - 1);
   board[y][x] += turnColor * controlsTurn * type;
   return changeTurnColor;
