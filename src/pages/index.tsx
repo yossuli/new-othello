@@ -131,26 +131,24 @@ const clickBoard = (
   //ANCHOR - clickBoard
   const clearBoard = board.map((row) => row.map((color) => color % 3));
   const turn = 3 - changeBoard(params.y, params.x, turnColor, 1, clearBoard);
-  //test
-  changeBoard3(clearBoard, turn);
-  const nextTurn = turn * pass(clearBoard) - (3 - turn) * (pass(clearBoard) - 1); //pass
-  changeBoard3(clearBoard, nextTurn);
-  const nextNextTurn = turn * pass(clearBoard) - 3 * (pass(clearBoard) - 1); //end
-  return { newBoard: clearBoard, turn: nextNextTurn };
+  const nextBoard = changeBoard3(clearBoard, turn);
+  const nextTurn = turn * pass(nextBoard) - (3 - turn) * (pass(nextBoard) - 1); //pass
+  const nextNextBoard = changeBoard3(nextBoard, nextTurn);
+  const nextNextTurn = nextTurn * pass(nextNextBoard) - 3 * (pass(nextNextBoard) - 1); //end
+  return { newBoard: nextNextBoard, turn: nextNextTurn };
 };
 
 const Home = () => {
-  const normalBoard: number[][] = Array(8)
-    .fill(0)
-    .map(() => Array(8).fill(0));
-  normalBoard[3][4] = 1;
-  normalBoard[3][3] = 2;
-  normalBoard[4][4] = 2;
-  normalBoard[4][3] = 1;
-  normalBoard[2][3] = 3;
-  normalBoard[3][2] = 3;
-  normalBoard[4][5] = 3;
-  normalBoard[5][4] = 3;
+  const normalBoard: number[][] = [
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 3, 0, 0, 0, 0],
+    [0, 0, 3, 2, 1, 0, 0, 0],
+    [0, 0, 0, 1, 2, 3, 0, 0],
+    [0, 0, 0, 0, 3, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+  ];
   const [board, setBoard] = useState(normalBoard);
   const [turnColor, setTurnColor] = useState(1);
   const clickHandler = (i: number, j: number) => {
