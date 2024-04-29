@@ -101,14 +101,15 @@ const changeBoard = (y: number, x: number, turnColor: number, type: 0 | 1, board
   board[y][x] += turnColor * controlsTurn * type;
   return changeTurnColor;
 };
-//ANCHOR - changeBoard3
-const changeBoard3 = (board: BoardArray, inTurn: number) => {
-  board.forEach((row, y) => {
-    row.forEach((_, x) => {
-      changeBoard(y, x, inTurn, 0, board);
-    });
-  });
+
+const changeCell3 = (y: number, x: number, turnColor: number, type: 0 | 1, board: BoardArray) => {
+  const dirs5 = dirs(y, x, turnColor, type, board);
+  return Math.min(1, dirs5.filter((dir) => dir.arr.length !== 0).length) * 3;
 };
+
+//ANCHOR - changeBoard3
+const changeBoard3 = (board: BoardArray, inTurn: number) =>
+  board.map((row, y) => row.map((cell, x) => cell + changeCell3(y, x, inTurn, 1, board)));
 //ANCHOR - turn
 
 const pass = (board: number[][]) => Math.min(1, board.flat().filter((n) => n === 3).length); //pass=>0
