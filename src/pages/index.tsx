@@ -23,7 +23,7 @@ const dir: { y: -1 | 0 | 1; x: -1 | 0 | 1 }[] = [
 const num0or_1 = (dir: { arr: number[]; y: number; x: number }) =>
   Math.ceil(Math.max(dir.y + 0.5 * dir.x, 0) / 2) - 1;
 //ANCHOR - changeBoard
-const dirs = (y: number, x: number, turnColor: number, type: 0 | 1, board: BoardArray) => {
+const dirs = (y: number, x: number, turnColor: number, board: BoardArray) => {
   const dirs1: { arr: number[]; y: number; x: number }[] = dir.map((d) => {
     const arr1 = board //クリックしたところを起点に長方形にboardを切り取る
       .map((row) =>
@@ -47,7 +47,7 @@ const dirs = (y: number, x: number, turnColor: number, type: 0 | 1, board: Board
       );
     const arr21 = arr2
       .flat()
-      .filter((n, i) => i % Math.max(1, arr2.length ** (dxy ** 2) + dxy) === 0); //見る方向に即した１次元配列にする
+      .filter((_, i) => i % Math.max(1, arr2.length ** (dxy ** 2) + dxy) === 0); //見る方向に即した１次元配列にする
     const a = Math.min(Math.abs(Math.min(0, dxy)), arr21.length - 1); //左下右上方向の処理と1ｘ1の時の処理
     const arr3 = arr21.slice(a, arr21.length - a); //左下右上方向の時に余計なものが含まれるため取り除く
     return { arr: arr3, y: d.y, x: d.x };
@@ -57,6 +57,7 @@ const dirs = (y: number, x: number, turnColor: number, type: 0 | 1, board: Board
   const dirs3 = dirs2 //クリックしたマスからturnColorまでの配列に切り出す
     .map((dir) => {
       return {
+        ...dir,
         arr: dir.arr.slice(
           Math.max(
             num0or_1(dir) + 1,
@@ -73,55 +74,45 @@ const dirs = (y: number, x: number, turnColor: number, type: 0 | 1, board: Board
             ),
           ),
         ),
-        y: dir.y,
-        x: dir.x,
       };
     });
   const dirs4 = dirs3.map((dir) => {
     return {
+      ...dir,
       arr: dir.arr.slice(-num0or_1(dir), dir.arr.length - (num0or_1(dir) + 1)), //最初と最後は自身の色と空マスなため除外
-      y: dir.y,
-      x: dir.x,
     };
   });
   return dirs4.filter((dir) => dir.arr.every((n) => n === 3 - turnColor)); //配列の中身がすべて3-turnColorか判断
 };
-const changeBoard = (y: number, x: number, turnColor: number, type: 0 | 1, board: BoardArray) => {
-  const dirs5 = dirs(y, x, turnColor, type, board);
+const changeBoard = (y: number, x: number, turnColor: number, board: BoardArray) => {
+  const dirs5 = dirs(y, x, turnColor, board);
   dirs5.forEach((dir) => {
     dir.arr.forEach((_, n) => {
-      board[y + (n + 1) * dir.y * type][x + (n + 1) * dir.x * type] =
-        turnColor * type - 3 * (type - 1);
+      board[y + (n + 1) * dir.y][x + (n + 1) * dir.x] = turnColor;
     });
   });
-  const changeTurnColor = [3 - turnColor, turnColor * type - (3 - turnColor) * (type - 1)][
-    Math.min(dirs5.length, 1)
-  ];
+  const changeTurnColor = [3 - turnColor, turnColor][Math.min(dirs5.length, 1)];
   const controlsTurn = Math.abs(Math.abs(turnColor - changeTurnColor) - 1);
-  board[y][x] += turnColor * controlsTurn * type;
+  board[y][x] += turnColor * controlsTurn;
   return changeTurnColor;
 };
 
-const changeCell3 = (y: number, x: number, turnColor: number, type: 0 | 1, board: BoardArray) => {
-  const dirs5 = dirs(y, x, turnColor, type, board);
+const changeCell3 = (y: number, x: number, turnColor: number, board: BoardArray) => {
+  const dirs5 = dirs(y, x, turnColor, board);
   return Math.min(1, dirs5.filter((dir) => dir.arr.length !== 0).length) * 3;
 };
 
 //ANCHOR - changeBoard3
 const changeBoard3 = (board: BoardArray, inTurn: number) =>
-  board.map((row, y) => row.map((cell, x) => cell + changeCell3(y, x, inTurn, 1, board)));
+  board.map((row, y) => row.map((cell, x) => cell + changeCell3(y, x, inTurn, board)));
 //ANCHOR - turn
 
 const pass = (board: number[][]) => Math.min(1, board.flat().filter((n) => n === 3).length); //pass=>0
 
-const getCount = (board: BoardArray): number[] => {
-  //ANCHOR - getBoard
-  const count = [
-    board.flat().filter((n) => n === 2).length,
-    board.flat().filter((n) => n === 1).length,
-  ];
-  return count;
-};
+const count = (board: BoardArray): number[] => [
+  board.flat().filter((n) => n === 2).length,
+  board.flat().filter((n) => n === 1).length,
+];
 
 const clickBoard = (
   params: Position,
@@ -130,7 +121,7 @@ const clickBoard = (
 ): { newBoard: BoardArray; turn: number } => {
   //ANCHOR - clickBoard
   const clearBoard = board.map((row) => row.map((color) => color % 3));
-  const turn = 3 - changeBoard(params.y, params.x, turnColor, 1, clearBoard);
+  const turn = 3 - changeBoard(params.y, params.x, turnColor, clearBoard);
   const nextBoard = changeBoard3(clearBoard, turn);
   const nextTurn = turn * pass(nextBoard) - (3 - turn) * (pass(nextBoard) - 1); //pass
   const nextNextBoard = changeBoard3(nextBoard, nextTurn);
@@ -168,8 +159,8 @@ const Home = () => {
           )),
         )}
       </div>
-      white {getCount(board)[0]} : {['Black Turn', 'White Turn', 'Game End!'][turnColor - 1]} :{' '}
-      {getCount(board)[1]} black
+      white {count(board)[0]} : {['Black Turn', 'White Turn', 'Game End!'][turnColor - 1]} :{' '}
+      {count(board)[1]} black
     </div>
   );
 };
