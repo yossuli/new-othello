@@ -157,7 +157,6 @@ const Home = () => {
     setBoard(newBoard);
     setTurnColor(turn);
   };
-  console.log(turnColor);
   return (
     <div className={styles.container}>
       <div className={styles.board}>
