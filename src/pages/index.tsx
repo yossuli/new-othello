@@ -34,7 +34,9 @@ const Home = () => {
         clearBoard[y + (n + 1) * vec.y][x + (n + 1) * vec.x] = turnColor;
       });
     });
-    const changeTurnColor = [3 - turnColor, turnColor][Math.min(lwv.length, 1)];
+    const changeTurnColor = [3 - turnColor, turnColor][
+      Math.min(lwv.filter(({ line }) => line.length > 0).length, 1)
+    ];
     const controlsTurn = Math.abs(Math.abs(turnColor - changeTurnColor) - 1);
     clearBoard[y][x] += turnColor * controlsTurn;
     //pass
