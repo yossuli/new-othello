@@ -29,9 +29,9 @@ const Home = () => {
     const clonedBoard = structuredClone(board);
     const clearBoard = clonedBoard.map((row) => row.map((color) => color % 3));
     const lwv = toBeChangedCells(y, x, turnColor, clearBoard);
-    lwv.forEach(({ line, x, y }) => {
+    lwv.forEach(({ line, ...vec }) => {
       line.forEach((_, n) => {
-        clearBoard[y + (n + 1) * y][x + (n + 1) * x] = turnColor;
+        clearBoard[y + (n + 1) * vec.y][x + (n + 1) * vec.x] = turnColor;
       });
     });
     const changeTurnColor = [3 - turnColor, turnColor][Math.min(lwv.length, 1)];
