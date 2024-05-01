@@ -6,12 +6,12 @@ import { numOfIsNotPass } from '../utils/numOfIsNotPass';
 import { toBeChangedCells } from '../utils/toBeChangedCells';
 import { changeBoard3 } from '../utils/changeBoard3';
 
-const stoneStyles: Record<number, CSSProperties> = {
-  1: { backgroundColor: 'black' },
-  2: { backgroundColor: 'white' },
-  3: { backgroundColor: 'orange', width: '50%', height: '50%' },
-};
-
+const stoneStyles: CSSProperties[] = [
+  { display: 'none' },
+  { backgroundColor: 'black' },
+  { backgroundColor: 'white' },
+  { backgroundColor: 'orange', width: '50%', height: '50%' },
+];
 const Home = () => {
   const normalBoard: number[][] = [
     [0, 0, 0, 0, 0, 0, 0, 0],
@@ -56,7 +56,7 @@ const Home = () => {
         {board.map((row, y) =>
           row.map((cell, x) => (
             <div key={`${x}-${y}`} className={styles.cell} onClick={() => clickHandler(y, x)}>
-              {cell !== 0 && <div className={styles.stone} style={stoneStyles[cell]} />}
+              <div className={styles.stone} style={stoneStyles[cell]} />
             </div>
           )),
         )}
