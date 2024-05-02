@@ -49,3 +49,32 @@
   color: #000;
   background-color: #fff;
 }
+
+.candidate,
+.turn {
+  border: solid 0.6vh #f0d9b5;
+}
+
+.candidate {
+  cursor: pointer;
+}
+
+.candidateBlack:hover::after {
+  display: block;
+  width: 100%;
+  height: 100%;
+  content: '';
+  background-color: #0004;
+  border-radius: 1.4vh;
+  opacity: 0.5;
+}
+
+.candidateWhite:hover::after {
+  display: block;
+  width: 100%;
+  height: 100%;
+  content: '';
+  background-color: #fff;
+  border-radius: 1.4vh;
+  opacity: 0.5;
+}

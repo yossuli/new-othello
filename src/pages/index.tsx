@@ -4,6 +4,11 @@ import { count } from '../utils/count';
 import { numOfIsNotPass } from '../utils/numOfIsNotPass';
 import { toBeChangedCells } from '../utils/toBeChangedCells';
 import { changeBoard3 } from '../utils/changeBoard3';
+const cellClassHandler = (cell: number, turnColor: number) =>
+  ({
+    10: `${styles.candidate} ${styles.candidateBlack}`,
+    11: `${styles.candidate} ${styles.candidateWhite}`,
+  })[cell ** 2 + turnColor];
 const stoneClassHandler = (cell: number) =>
   ({
     0: styles.black,
@@ -56,7 +61,11 @@ const Home = () => {
       <div className={styles.board}>
         {board.map((row, y) =>
           row.map((cell, x) => (
-            <div key={`${x}-${y}`} className={styles.cell} onClick={() => clickHandler(y, x)}>
+            <div
+              key={`${x}-${y}`}
+              className={`${styles.cell} ${cellClassHandler(cell, turnColor)}`}
+              onClick={() => clickHandler(y, x)}
+            >
               <div className={`${styles.stone} ${stoneClassHandler(cell)}`} />
             </div>
           )),
