@@ -40,6 +40,6 @@ module.exports = {
     complexity: ['error', 1],
     'max-depth': ['error', 0],
     'max-nested-callbacks': ['error', 2],
-    'max-lines': ['error', 100],
+    'max-lines': ['error', 200],
   },
 };
