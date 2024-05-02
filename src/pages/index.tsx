@@ -5,23 +5,17 @@ import { numOfIsNotPass } from '../utils/numOfIsNotPass';
 import { toBeChangedCells } from '../utils/toBeChangedCells';
 import { changeBoard3 } from '../utils/changeBoard3';
 import type { BoardArray } from '../types';
+
 const cellClassHandler = (cell: number, turnColor: number) =>
   ({
     10: `${styles.candidate} ${styles.candidateBlack}`,
     11: `${styles.candidate} ${styles.candidateWhite}`,
   })[cell ** 2 + turnColor];
+
 const gameEndHandler = (board: BoardArray) =>
   ['winner is white!', 'draw', 'winner is black!'][
     Math.sign(count(board, 1) - count(board, 2)) + 1
   ];
-
-const stoneClassHandler = (cell: number) =>
-  ({
-    0: styles.black,
-    1: styles.black,
-    2: styles.white,
-    3: styles.black,
-  })[cell];
 
 const Home = () => {
   const normalBoard: number[][] = [
@@ -95,7 +89,14 @@ const Home = () => {
               className={`${styles.cell} ${cellClassHandler(cell, turnColor)}`}
               onClick={() => clickHandler(y, x)}
             >
-              <div className={`${styles.stone} ${stoneClassHandler(cell)}`} />
+              <div
+                className={`${styles.stone} ${
+                  {
+                    1: styles.black,
+                    2: styles.white,
+                  }[cell]
+                }`}
+              />
             </div>
           )),
         )}
