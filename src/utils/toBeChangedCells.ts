@@ -27,5 +27,5 @@ export const toBeChangedCells = (y: number, x: number, turnColor: number, board:
   const blankOrigin = target.filter(filterBlankOrigin);
   const originToTurnColor = blankOrigin.map((lwv) => sliceOriginToTurnColor(lwv, turnColor));
   const betweenOriginAndTurnColor = originToTurnColor.map(sliceBetweenOriginAndTurnColor);
-  return betweenOriginAndTurnColor.filter((dir) => dir.line.every((n) => n === 3 - turnColor));
+  return betweenOriginAndTurnColor.filter(({ line }) => line.every((n) => n === 3 - turnColor));
 };

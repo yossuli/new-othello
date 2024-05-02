@@ -1,7 +1,7 @@
 import type { BoardArray, Vector } from '../types';
 
-export const cutToLine = (board: BoardArray, vector: Vector) => {
-  const dxy = vector.x * vector.y;
+export const cutToLine = (board: BoardArray, { x: vx, y: vy }: Vector) => {
+  const dxy = vx * vy;
   const line = board
     .flat()
     .filter((_, i) => i % Math.max(1, board.length ** (dxy ** 2) + dxy) === 0);
