@@ -1,17 +1,17 @@
-import type { CSSProperties } from 'react';
 import { useState } from 'react';
 import styles from './index.module.css';
 import { count } from '../utils/count';
 import { numOfIsNotPass } from '../utils/numOfIsNotPass';
 import { toBeChangedCells } from '../utils/toBeChangedCells';
 import { changeBoard3 } from '../utils/changeBoard3';
+const stoneClassHandler = (cell: number) =>
+  ({
+    0: styles.black,
+    1: styles.black,
+    2: styles.white,
+    3: styles.black,
+  })[cell];
 
-const stoneStyles: CSSProperties[] = [
-  { display: 'none' },
-  { backgroundColor: 'black' },
-  { backgroundColor: 'white' },
-  { backgroundColor: 'orange', width: '50%', height: '50%' },
-];
 const Home = () => {
   const normalBoard: number[][] = [
     [0, 0, 0, 0, 0, 0, 0, 0],
@@ -57,7 +57,7 @@ const Home = () => {
         {board.map((row, y) =>
           row.map((cell, x) => (
             <div key={`${x}-${y}`} className={styles.cell} onClick={() => clickHandler(y, x)}>
-              <div className={styles.stone} style={stoneStyles[cell]} />
+              <div className={`${styles.stone} ${stoneClassHandler(cell)}`} />
             </div>
           )),
         )}

@@ -35,3 +35,17 @@
   border-radius: 50%;
   box-shadow: #0007 0 0.33vh 0.75vh;
 }
+
+.stoneBlank {
+  display: none;
+}
+
+.black {
+  color: #fff;
+  background-color: #000;
+}
+
+.white {
+  color: #000;
+  background-color: #fff;
+}
