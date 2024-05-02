@@ -4,11 +4,17 @@ import { count } from '../utils/count';
 import { numOfIsNotPass } from '../utils/numOfIsNotPass';
 import { toBeChangedCells } from '../utils/toBeChangedCells';
 import { changeBoard3 } from '../utils/changeBoard3';
+import type { BoardArray } from '../types';
 const cellClassHandler = (cell: number, turnColor: number) =>
   ({
     10: `${styles.candidate} ${styles.candidateBlack}`,
     11: `${styles.candidate} ${styles.candidateWhite}`,
   })[cell ** 2 + turnColor];
+const gameEndHandler = (board: BoardArray) =>
+  ['winner is white!', 'draw', 'winner is black!'][
+    Math.sign(count(board, 1) - count(board, 2)) + 1
+  ];
+
 const stoneClassHandler = (cell: number) =>
   ({
     0: styles.black,
@@ -58,6 +64,29 @@ const Home = () => {
   };
   return (
     <div className={styles.container}>
+      <div className={styles.score}>
+        <div className={`${styles.cell} ${styles.black} ${{ 1: styles.turn }[turnColor]}`}>
+          {count(board, 1)}
+        </div>
+        <div className={styles.scoreBar}>
+          <div className={styles.description}>
+            <div className={styles.descriptionInner}>
+              {['Black Turn', 'White Turn', `Game End! ${gameEndHandler(board)}`][turnColor - 1]}
+            </div>
+          </div>
+          <div
+            className={`${styles.scoreBarGraph} ${styles.black}`}
+            style={{ width: `${(count(board, 1) / (count(board, 1) + count(board, 2))) * 100}%` }}
+          />
+          <div
+            className={`${styles.scoreBarGraph} ${styles.white}`}
+            style={{ width: `${(count(board, 2) / (count(board, 1) + count(board, 2))) * 100}%` }}
+          />
+        </div>
+        <div className={`${styles.cell} ${styles.white} ${{ 2: styles.turn }[turnColor]}`}>
+          {count(board, 2)}
+        </div>
+      </div>
       <div className={styles.board}>
         {board.map((row, y) =>
           row.map((cell, x) => (
@@ -71,8 +100,6 @@ const Home = () => {
           )),
         )}
       </div>
-      white {count(board, 2)} : {['Black Turn', 'White Turn', 'Game End!'][turnColor - 1]} :{' '}
-      {count(board, 1)} black
     </div>
   );
 };
