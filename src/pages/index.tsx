@@ -34,19 +34,23 @@ const Home = () => {
     const clonedBoard = structuredClone(board);
     const clearBoard = clonedBoard.map((row) => row.map((color) => color % 3));
     const lwvs = toBeChangedCells(y, x, turnColor, clearBoard);
-    lwvs
-      .map(({ line, x: vx, y: vy }) => line.map((_, n) => [y + (n + 1) * vy, x + (n + 1) * vx]))
-      .flat()
-      .forEach(([y, x]) => {
-        clearBoard[y][x] = turnColor;
-      });
+    const toBeChangeCellsSet = new Set(
+      lwvs
+        .map(({ line, x: vx, y: vy }) =>
+          line.map((_, n) => `${y + (n + 1) * vy}-${x + (n + 1) * vx}`),
+        )
+        .flat(),
+    );
+    const changedBoard = clearBoard.map((row, y) =>
+      row.map((cell, x) => [cell, 3 - cell][+toBeChangeCellsSet.has(`${y}-${x}`)]),
+    );
     const changeTurnColor = [3 - turnColor, turnColor][
       Math.min(lwvs.filter(({ line }) => line.length > 0).length, 1)
     ];
     const controlsTurn = Math.abs(Math.abs(turnColor - changeTurnColor) - 1);
-    clearBoard[y][x] += (turnColor * controlsTurn) % 6;
+    changedBoard[y][x] += (turnColor * controlsTurn) % 6;
     //pass
-    const candidateBoard = changeBoard3(clearBoard, 3 - changeTurnColor);
+    const candidateBoard = changeBoard3(changedBoard, 3 - changeTurnColor);
     const notPass = numOfIsNotPass(candidateBoard);
     const nextTurn = (3 - changeTurnColor) * notPass - changeTurnColor * (notPass - 1);
     //end
