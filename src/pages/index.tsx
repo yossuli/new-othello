@@ -28,14 +28,15 @@ const Home = () => {
   const clickHandler = (y: number, x: number) => {
     const clonedBoard = structuredClone(board);
     const clearBoard = clonedBoard.map((row) => row.map((color) => color % 3));
-    const lwv = toBeChangedCells(y, x, turnColor, clearBoard);
-    lwv.forEach(({ line, ...vec }) => {
-      line.forEach((_, n) => {
-        clearBoard[y + (n + 1) * vec.y][x + (n + 1) * vec.x] = turnColor;
+    const lwvs = toBeChangedCells(y, x, turnColor, clearBoard);
+    lwvs
+      .map(({ line, x: vx, y: vy }) => line.map((_, n) => [y + (n + 1) * vy, x + (n + 1) * vx]))
+      .flat()
+      .forEach(([y, x]) => {
+        clearBoard[y][x] = turnColor;
       });
-    });
     const changeTurnColor = [3 - turnColor, turnColor][
-      Math.min(lwv.filter(({ line }) => line.length > 0).length, 1)
+      Math.min(lwvs.filter(({ line }) => line.length > 0).length, 1)
     ];
     const controlsTurn = Math.abs(Math.abs(turnColor - changeTurnColor) - 1);
     clearBoard[y][x] += turnColor * controlsTurn;
