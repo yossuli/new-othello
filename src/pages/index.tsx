@@ -44,7 +44,7 @@ const Home = () => {
       Math.min(lwvs.filter(({ line }) => line.length > 0).length, 1)
     ];
     const controlsTurn = Math.abs(Math.abs(turnColor - changeTurnColor) - 1);
-    clearBoard[y][x] += turnColor * controlsTurn;
+    clearBoard[y][x] += (turnColor * controlsTurn) % 6;
     //pass
     const candidateBoard = changeBoard3(clearBoard, 3 - changeTurnColor);
     const notPass = numOfIsNotPass(candidateBoard);
