@@ -13,7 +13,7 @@ const cellClassHandler = (cell: number, turnColor: number) =>
   })[cell ** 2 + turnColor];
 
 const gameEndHandler = (board: BoardArray) =>
-  ['winner is white!', 'draw', 'winner is black!'][
+  ['Winner is white!', 'draw', 'Winner is black!'][
     Math.sign(count(board, 1) - count(board, 2)) + 1
   ];
 
@@ -60,6 +60,15 @@ const Home = () => {
     setBoard(nextCandidateBoard);
     setTurnColor(nextNextTurn);
   };
+  const restart = () => {
+    setTimeout(() => {
+      setBoard(normalBoard);
+      setTurnColor(1);
+    }, 500);
+  };
+  const leave = () => {
+    window.close();
+  };
   return (
     <div className={styles.container}>
       <div className={styles.score}>
@@ -69,7 +78,7 @@ const Home = () => {
         <div className={styles.scoreBar}>
           <div className={styles.description}>
             <div className={styles.descriptionInner}>
-              {['Black Turn', 'White Turn', `Game End! ${gameEndHandler(board)}`][turnColor - 1]}
+              {['Black Turn', 'White Turn', 'Game End !'][turnColor - 1]}
             </div>
           </div>
           <div
@@ -86,6 +95,19 @@ const Home = () => {
         </div>
       </div>
       <div className={styles.board}>
+        <div className={`${{ 3: styles.flex }[turnColor]} ${styles.result}`}>
+          <h1>Game End !</h1>
+          <h2>{gameEndHandler(board)}</h2>
+          <h2>
+            black {count(board, 1)} - {count(board, 2)} white
+          </h2>
+          <h3 className={styles.restart} onClick={restart}>
+            restart
+          </h3>
+          <h3 className={styles.leave} onClick={leave}>
+            leave
+          </h3>
+        </div>
         {board.map((row, y) =>
           row.map((cell, x) => (
             <div
