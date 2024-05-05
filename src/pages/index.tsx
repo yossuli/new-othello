@@ -16,7 +16,13 @@ const gameEndHandler = (board: BoardArray) =>
   ['Winner is white!', 'draw', 'Winner is black!'][
     Math.sign(count(board, 1) - count(board, 2)) + 1
   ];
-
+const scoreBarGraphWidth = (board: BoardArray, color: 1 | 2) =>
+  (count(board, color) / (count(board, 1) + count(board, 2))) * 100;
+const stoneClassHandler = (cell: number) =>
+  ({
+    1: styles.black,
+    2: styles.white,
+  })[cell];
 const Home = () => {
   const normalBoard: number[][] = [
     [0, 0, 0, 0, 0, 0, 0, 0],
@@ -83,11 +89,11 @@ const Home = () => {
           </div>
           <div
             className={`${styles.scoreBarGraph} ${styles.black}`}
-            style={{ width: `${(count(board, 1) / (count(board, 1) + count(board, 2))) * 100}%` }}
+            style={{ width: `${scoreBarGraphWidth(board, 1)}%` }}
           />
           <div
             className={`${styles.scoreBarGraph} ${styles.white}`}
-            style={{ width: `${(count(board, 2) / (count(board, 1) + count(board, 2))) * 100}%` }}
+            style={{ width: `${scoreBarGraphWidth(board, 2)}%` }}
           />
         </div>
         <div className={`${styles.cell} ${styles.white} ${{ 2: styles.turn }[turnColor]}`}>
@@ -115,14 +121,7 @@ const Home = () => {
               className={`${styles.cell} ${cellClassHandler(cell, turnColor)}`}
               onClick={() => clickHandler(y, x)}
             >
-              <div
-                className={`${styles.stone} ${
-                  {
-                    1: styles.black,
-                    2: styles.white,
-                  }[cell]
-                }`}
-              />
+              <div className={`${styles.stone} ${stoneClassHandler(cell)}`} />
             </div>
           )),
         )}
